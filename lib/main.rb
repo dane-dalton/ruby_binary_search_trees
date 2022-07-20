@@ -1,7 +1,7 @@
 class Node
   attr_accessor :data, :left, :right
 
-  def initialize(data)
+  def initialize(data = nil)
     @data = data
     @left = nil
     @right = nil
@@ -13,7 +13,7 @@ class Tree
 
   def initialize()
     @rand_arr = random_array()
-    @root = self.build_tree(rand_arr, 0, rand_arr.length - 1)
+    @root = build_tree(@rand_arr)
   end
 
   def random_array()
@@ -23,20 +23,30 @@ class Tree
       # For simplicities sake, don't use duplicates atm - makes balancing the tree more difficult
       array << value unless array.any?(value)
     end
+    array = array.sort
     return array
   end
 
-  def build_tree(array, start, end_element)
-    return nil if start > end_element
-    mid = (end_element - start) / 2
-    @root = Node.new(array[mid]) if @root == nil
-    temp = @root
-    p temp
-    p array
-    temp.left = build_tree(array, start, mid - 1)
-    temp.right = build_tree(array, mid + 1, end_element)
+  def build_tree(array)
+    return nil if array.empty?
+    mid = (array.length - 1) / 2
+    node = Node.new(array[mid])
+    node.left = build_tree(array[0...mid])
+    node.right = build_tree(array[(mid + 1)..-1])
+    return node
+  end
 
-    return Node.new(array[mid])
+  def insert(value)
+    return @root = Node.new(value) if @root == nil
+    temp = @root
+    until temp == nil
+      if value >= temp.data
+        temp = temp.right
+      else
+        temp = temp.left
+      end
+    end
+    return temp = Node.new(value)
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -47,4 +57,5 @@ class Tree
 end
 
 tree = Tree.new()
-tree.pretty_print
+tree.insert(100)
+tree.pretty_print()
