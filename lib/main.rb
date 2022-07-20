@@ -39,14 +39,15 @@ class Tree
   def insert(value)
     return @root = Node.new(value) if @root == nil
     temp = @root
-    until temp == nil
+    until temp.left == nil || temp.right == nil
       if value >= temp.data
         temp = temp.right
       else
         temp = temp.left
       end
     end
-    return temp = Node.new(value)
+    return temp.right = Node.new(value) if value >= temp.data
+    return temp.left = Node.new(value) if value < temp.data
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -57,5 +58,5 @@ class Tree
 end
 
 tree = Tree.new()
-tree.insert(100)
+tree.insert(33)
 tree.pretty_print()
