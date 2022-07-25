@@ -85,6 +85,19 @@ class Tree
     ###Node being replaced should have no left child, and if it has a right, then its parent points to its right node before it replaces the desired value
   end
 
+  def find(value)
+    return @root if value == @root.data
+    temp = @root
+    until value == temp.data
+      if value < temp.data
+        temp = temp.left
+      else
+        temp = temp.right
+      end
+    end
+    return temp
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -105,3 +118,4 @@ tree.insert(55)
 tree.pretty_print()
 tree.delete(50)
 tree.pretty_print()
+p tree.find(47)
