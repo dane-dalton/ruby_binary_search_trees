@@ -39,15 +39,50 @@ class Tree
   def insert(value)
     return @root = Node.new(value) if @root == nil
     temp = @root
-    until temp.left == nil || temp.right == nil
+    until temp == nil
       if value >= temp.data
+        return temp.right = Node.new(value) if temp.right == nil
         temp = temp.right
       else
+        return temp.left = Node.new(value) if temp.left == nil
         temp = temp.left
       end
     end
-    return temp.right = Node.new(value) if value >= temp.data
-    return temp.left = Node.new(value) if value < temp.data
+  end
+
+  def delete(value, node = @root)
+    return node if node == nil
+
+    if value < node.data
+      node.left = delete(value, node.left)
+    elsif value > node.data
+      node.right = delete(value, node.right)
+    else
+      if node.left == nil
+        temp = node.right
+        node = nil
+        return temp
+      elsif node.right == nil
+        temp = node.left
+        node = nil
+        return temp
+      end
+
+      temp = node.right
+      until temp.left == nil
+        temp = temp.left
+      end
+
+      node.data = temp.data
+
+      node.right = delete(temp.data, node.right)
+    end
+
+    return node
+    #If node has no children, simply delete it
+    #If node has one child, its parent points to the child then the node is deleted
+    #If node has two children, find next biggest value and replace with that value
+    ###Node being replaced should have no left child, and if it has a right, then its parent points to its right node before it replaces the desired value
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -58,5 +93,15 @@ class Tree
 end
 
 tree = Tree.new()
+tree.insert(1)
+tree.insert(2)
+tree.insert(3)
 tree.insert(33)
+tree.insert(50)
+tree.insert(51)
+tree.insert(52)
+tree.insert(47)
+tree.insert(55)
+tree.pretty_print()
+tree.delete(50)
 tree.pretty_print()
