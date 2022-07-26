@@ -98,6 +98,21 @@ class Tree
     return temp
   end
 
+  #breadth first search
+  def level_order
+    #make queue
+    queue = []
+    queue << @root
+    queue.each do |node|
+      queue << node.left unless node.left == nil
+      queue << node.right unless node.right == nil
+      yield node if block_given?
+    end
+
+    #return queue
+    p queue = queue.map { |node| node.data }
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -119,3 +134,4 @@ tree.pretty_print()
 tree.delete(50)
 tree.pretty_print()
 p tree.find(47)
+tree.level_order { |node| node.data += 10 }
