@@ -150,8 +150,21 @@ class Tree
   end
 
   #left, right, root
-  def postorder
+  def postorder_recursive(root = @root, stack = [])
+    return if root == nil
+    postorder_recursive(root.left, stack)
+    postorder_recursive(root.right, stack)
+    stack << root
 
+    stack
+  end
+
+  def postorder 
+    stack = postorder_recursive()
+
+    stack.each { |node| yield node } if block_given?
+
+    stack.map { |node| node.data }
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -177,5 +190,6 @@ tree.pretty_print()
 p tree.find(47)
 p tree.level_order { |node| node.data += 10 }
 p tree.inorder { |node| node.data -= 1 }
-p tree.preorder { |node| node.data -= 100 }
+p tree.preorder { |node| node.data += 100 }
+p tree.postorder { |node| node.data -= 50 }
 tree.pretty_print()
