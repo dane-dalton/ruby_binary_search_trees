@@ -167,6 +167,36 @@ class Tree
     stack.map { |node| node.data }
   end
 
+  #longest path from node to a leaf
+  def height(node)
+    return 0 if node == nil
+    a = height(node.left)
+    b = height(node.right)
+    if a > b
+      return a + 1
+    else
+      return b + 1
+    end
+  end
+
+  def depth(node)
+    return 0 if node == @root
+    temp = @root
+    d = 0
+    until node == temp
+      if node.data < temp.data
+        d += 1
+        temp = temp.left
+      elsif node.data > temp.data
+        d += 1
+        temp = temp.right
+      else
+        return d
+      end
+    end
+    d
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -187,9 +217,10 @@ tree.insert(55)
 tree.pretty_print()
 tree.delete(50)
 tree.pretty_print()
-p tree.find(47)
-p tree.level_order { |node| node.data += 10 }
-p tree.inorder { |node| node.data -= 1 }
-p tree.preorder { |node| node.data += 100 }
-p tree.postorder { |node| node.data -= 50 }
+p tree.level_order
+p tree.inorder
+p tree.preorder
+p tree.postorder
+p tree.height(tree.find(51))
+p tree.depth(tree.find(51))
 tree.pretty_print()
