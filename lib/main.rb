@@ -110,7 +110,48 @@ class Tree
     end
 
     #return queue
-    p queue = queue.map { |node| node.data }
+    queue.map { |node| node.data }
+  end
+
+  #left, root, right
+  def inorder_recursive(root = @root, stack = [])
+    return if root == nil
+    inorder_recursive(root.left, stack)
+    stack << root
+    inorder_recursive(root.right, stack)
+
+    stack
+  end
+
+  def inorder
+    stack = self.inorder_recursive()
+
+    stack.each { |node| yield node } if block_given?
+
+    stack.map { |node| node.data }
+  end
+
+  #root, left, right
+  def preorder_recursive(root = @root, stack = [])
+    return if root == nil
+    stack << root
+    preorder_recursive(root.left, stack)
+    preorder_recursive(root.right, stack)
+
+    stack
+  end
+
+  def preorder
+    stack = preorder_recursive()
+
+    stack.each { |node| yield node } if block_given?
+
+    stack.map { |node| node.data }
+  end
+
+  #left, right, root
+  def postorder
+
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -134,4 +175,7 @@ tree.pretty_print()
 tree.delete(50)
 tree.pretty_print()
 p tree.find(47)
-tree.level_order { |node| node.data += 10 }
+p tree.level_order { |node| node.data += 10 }
+p tree.inorder { |node| node.data -= 1 }
+p tree.preorder { |node| node.data -= 100 }
+tree.pretty_print()
